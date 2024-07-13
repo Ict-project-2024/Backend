@@ -1,0 +1,10 @@
+.env 
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Dependency directories
+node_modules/
