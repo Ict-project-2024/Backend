@@ -31,8 +31,8 @@ mongoose
   )
   .then(() => {
     console.log("Connected to database!");
-    app.listen(3000, () => {
-      console.log(`server is running on ${process.env.BASE_URL + process.env.PORT}`);
+    app.listen(process.env.PORT, () => {
+      console.log(`server is running on ${process.env.BASE_URL}:${process.env.PORT}`);
     });
   })
   .catch(() => {

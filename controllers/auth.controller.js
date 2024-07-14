@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken'
 import { CreateError } from "../utils/error.js"
 import { CreateSuccess } from "../utils/success.js"
 import crypto from "crypto"
-import nodemailer from "nodemailer"
+import { sendVerificationEmail } from "../utils/emailUtils.js"
 
 
 export const register = async (req, res, next) => {
@@ -31,25 +31,7 @@ export const register = async (req, res, next) => {
         await newUser.save();
 
         // Send verification email
-        const verificationLink = `${process.env.BASE_URL + process.env.PORT}/api/auth/verify-email?token=${newUser.verificationToken}`;
-
-        const transporter = nodemailer.createTransport({
-            service: 'Gmail',
-            auth: {
-              user: process.env.VERIFICATION_EMAIL,
-              pass: process.env.VERIFICATION_EMAIL_PASSWORD 
-            }
-          });
-          
-        const mailOptions = {
-            from: process.env.VERIFICATION_EMAIL,
-            to: newUser.email,
-            subject: 'Email Verification',
-            text: `Please verify your email by clicking the following link: ${verificationLink}`,
-            html: `<a href="${verificationLink}">Verify Email</a>`
-        };
-
-        await transporter.sendMail(mailOptions);
+        await sendVerificationEmail(newUser.email, newUser.verificationToken);
 
 
         // res.status(200).json(newUser);
@@ -149,7 +131,8 @@ export const verifyEmail = async (req, res, next) => {
         user.verificationTokenExpires = undefined;
         await user.save();
 
-        res.send('Email verified successfully!');
+        // res.send('Email verified successfully!');
+        return next(CreateSuccess(200, "Email verified successfully!", user));
     } catch (error) {
         res.status(400).send({ error: error.message });
     }
