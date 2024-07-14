@@ -4,6 +4,9 @@ import bcrypt from "bcryptjs"
 import jwt from 'jsonwebtoken'
 import { CreateError } from "../utils/error.js"
 import { CreateSuccess } from "../utils/success.js"
+import crypto from "crypto"
+import nodemailer from "nodemailer"
+
 
 export const register = async (req, res, next) => {
 
@@ -16,13 +19,41 @@ export const register = async (req, res, next) => {
             lastName: req.body.lastName,
             email: req.body.email,
             TeNumber: req.body.teNumber,
-            gender:req.body.gender,
+            gender: req.body.gender,
             password: hashPassword,
             roles: role
         });
+
+        // Generate verification token
+        newUser.verificationToken = crypto.randomBytes(32).toString('hex');
+        newUser.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+
         await newUser.save();
+
+        // Send verification email
+        const verificationLink = `${process.env.BASE_URL + process.env.PORT}/api/auth/verify-email?token=${newUser.verificationToken}`;
+
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+              user: process.env.VERIFICATION_EMAIL,
+              pass: process.env.VERIFICATION_EMAIL_PASSWORD 
+            }
+          });
+          
+        const mailOptions = {
+            from: process.env.VERIFICATION_EMAIL,
+            to: newUser.email,
+            subject: 'Email Verification',
+            text: `Please verify your email by clicking the following link: ${verificationLink}`,
+            html: `<a href="${verificationLink}">Verify Email</a>`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+
         // res.status(200).json(newUser);
-        return next(CreateSuccess(200, "User registration succesfull.."));
+        return next(CreateSuccess(200, "User registration succesfull! Please check your email to verify your account."));
 
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -68,7 +99,7 @@ export const login = async (req, res, next) => {
         // Find user by email
         const user = await User.findOne({ email: email }).populate("roles", "role");
 
-        const { roles } = user; 
+        const { roles } = user;
 
         if (!user) {
             return res.status(401).json({ message: 'Invalid username' });
@@ -86,7 +117,7 @@ export const login = async (req, res, next) => {
                 message: "Login Success",
                 data: user
             })
-        }else{
+        } else {
 
             // return res.status(401).json({ message: 'Invalid username or password'});
             return next(CreateError(400, "Invalid username or password"));
@@ -96,6 +127,31 @@ export const login = async (req, res, next) => {
 
     } catch (error) {
         return next(CreateError(400, "Invalid username"));
-        
+
     }
+}
+
+export const verifyEmail = async (req, res, next) => {
+
+    try {
+        const { token } = req.query;
+        const user = await User.findOne({
+            verificationToken: token,
+            verificationTokenExpires: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.status(400).send('Invalid or expired token');
+        }
+
+        user.isVerified = true;
+        user.verificationToken = undefined;
+        user.verificationTokenExpires = undefined;
+        await user.save();
+
+        res.send('Email verified successfully!');
+    } catch (error) {
+        res.status(400).send({ error: error.message });
+    }
+
 }

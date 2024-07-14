@@ -10,7 +10,7 @@ dotenv.config();
 app.use(express.json());
 
 app.use("/api/role", roleRoute);
-app.use("/api/auth", authRoute)
+app.use("/api/auth", authRoute);
 
 
 app.use((obj, req, res, next) => {
@@ -32,7 +32,7 @@ mongoose
   .then(() => {
     console.log("Connected to database!");
     app.listen(3000, () => {
-      console.log("Server is running on port 3000");
+      console.log(`server is running on ${process.env.BASE_URL + process.env.PORT}`);
     });
   })
   .catch(() => {

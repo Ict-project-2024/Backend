@@ -13,16 +13,22 @@ const UserSchema = mongoose.Schema(
         email: {
             type: String,
             required: true,
-            unique: true,
-            validate: {
-                validator: function (v) {
-                    const emailRegex = /[a-z]+[0-9]+@fot\.sjp\.ac\.lk/;
-                    return emailRegex.test(v);
-                },
-                message: props => `${props.value} is not a valid email format!`
-            }
-        }
-        ,
+            unique: true
+            // validate: {
+            //     validator: function (v) {
+            //         const emailRegex = /[a-z]+[0-9]+@fot\.sjp\.ac\.lk/;
+            //         return emailRegex.test(v);
+            //     },
+            //     message: props => `${props.value} is not a valid email format!`
+            // }
+        },
+        isVerified: {
+            type: Boolean,
+            default: false
+        },
+        verificationToken: String,
+        verificationTokenExpires: Date,
+
         TeNumber: {
             type: String,
             required: true
