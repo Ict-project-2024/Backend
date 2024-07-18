@@ -35,6 +35,9 @@ const UserSchema = mongoose.Schema(
         },
         gender: {
             type: String,
+        },
+        mobileNumber:{
+            type: String,
             required: true
         },
         password: {

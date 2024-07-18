@@ -20,6 +20,7 @@ export const register = async (req, res, next) => {
             email: req.body.email,
             TeNumber: req.body.teNumber,
             gender: req.body.gender,
+            mobileNumber:req.body.mobileNumber,
             password: hashPassword,
             roles: role
         });
