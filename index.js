@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import roleRoute from './routes/role.route.js';
 import authRoute from './routes/auth.route.js';
+import libRoute from './routes/lib.route.js';
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
+app.use("/api/library",libRoute );
 
 
 app.use((obj, req, res, next) => {
