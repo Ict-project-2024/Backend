@@ -1,16 +1,65 @@
-// libraryController.js
-import { logEntry, logExit, getTrafficStatus } from "../utils/common.js";
+import LibraryStatus from "../models/LibStatus.js";
+import { verifyStudent, logEntry, logExit, getDailyTraffic } from "../utils/common.js";
+import { CreateError } from "../utils/error.js";
+import { CreateSuccess } from "../utils/success.js";
 
 export const enterLibrary = async (req, res, next) => {
   const { teNumber, phoneNumber } = req.body;
-  await logEntry(teNumber, phoneNumber, next);
+
+  try {
+    await verifyStudent(teNumber, phoneNumber, next);
+
+    await logEntry(teNumber, phoneNumber);
+
+    let status = await LibraryStatus.findOne({ date: new Date().toISOString().slice(0, 10) });
+    if (!status) {
+      status = new LibraryStatus();
+    }
+    status.currentOccupancy += 1;
+    await status.save();
+
+    return next(CreateSuccess(200, "Entry logged successfully"));
+  } catch (error) {
+    return next(CreateError(500, error.message));
+  }
 };
 
 export const exitLibrary = async (req, res, next) => {
   const { teNumber } = req.body;
-  await logExit(teNumber, next);
+
+  try {
+    await logExit(teNumber);
+
+    let status = await LibraryStatus.findOne({ date: new Date().toISOString().slice(0, 10) });
+    if (!status) {
+      return next(CreateError(404, "No library status found for today"));
+    }
+    status.currentOccupancy -= 1;
+    await status.save();
+
+    return next(CreateSuccess(200, "Exit logged successfully"));
+  } catch (error) {
+    return next(CreateError(500, error.message));
+  }
 };
 
 export const viewTrafficStatus = async (req, res, next) => {
-  await getTrafficStatus(next);
+  const currentDate = new Date().toISOString().slice(0, 10);
+  try {
+    const status = await LibraryStatus.findOne({ date: currentDate });
+
+    if (!status) {
+      return next(CreateError(404, "No traffic data available for today"));
+    }
+
+    const dailyTraffic = await getDailyTraffic(currentDate);
+
+    return next(CreateSuccess(200, "Library traffic status", {
+      currentOccupancy: status.currentOccupancy,
+      dailyTraffic
+    }));
+  } catch (error) {
+    return next(CreateError(500, error.message));
+  }
 };
+
