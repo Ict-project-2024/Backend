@@ -5,11 +5,19 @@ import roleRoute from './routes/role.route.js';
 import authRoute from './routes/auth.route.js';
 import libRoute from './routes/lib.route.js';
 import mcRoute from './routes/mc.route.js';
+import cors from 'cors';
 
 const app = express();
 
 dotenv.config();
 app.use(express.json());
+
+// CORS middleware configuration
+app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+}));
 
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
