@@ -12,6 +12,13 @@ const app = express();
 dotenv.config();
 app.use(express.json());
 
+// CORS middleware configuration
+app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:5173',
+}));
+
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/library",libRoute );
