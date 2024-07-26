@@ -5,6 +5,7 @@ import roleRoute from './routes/role.route.js';
 import authRoute from './routes/auth.route.js';
 import libRoute from './routes/lib.route.js';
 import mcRoute from './routes/mc.route.js';
+import canteenRoute from './routes/canteen.route.js'
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/library",libRoute );
 app.use("/api/mc",mcRoute );
+app.use("/api/canteen",canteenRoute);
 
 
 app.use((obj, req, res, next) => {
