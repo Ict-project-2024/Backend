@@ -6,7 +6,6 @@ import { CreateError } from "../utils/error.js";
 export const verifyStudent = async (teNumber, phoneNumber, next) => {
   let student = await Student.findOne({ TeNumber: teNumber });
   if (!student) {
-    console.log(teNumber, phoneNumber);
     return next(CreateError(400, "No user found.. redirect to register page"));
   }
   return student;

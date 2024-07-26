@@ -10,22 +10,10 @@ const CanteenStatusSchema = new mongoose.Schema({
         required: true
     }, // "staff" or "student"
     votes: {
-        '0-15': {
-            type: Number,
-            default: 0
-        },
-        '15-25': {
-            type: Number,
-            default: 0
-        },
-        '25-35': {
-            type: Number,
-            default: 0
-        },
-        '35+': {
-            type: Number,
-            default: 0
-        }
+        '0-15': { type: Number, default: 0 },
+        '15-25': { type: Number, default: 0 },
+        '25-35': { type: Number, default: 0 },
+        '35+': { type: Number, default: 0 }
     }
 });
 

@@ -5,8 +5,8 @@ import roleRoute from './routes/role.route.js';
 import authRoute from './routes/auth.route.js';
 import libRoute from './routes/lib.route.js';
 import mcRoute from './routes/mc.route.js';
-import canteenRoute from './routes/canteen.route.js'
-import cors from "cors"
+import canteenRoute from './routes/canteen.route.js';
+import cors from "cors";
 
 const app = express();
 
