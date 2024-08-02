@@ -7,8 +7,13 @@ import libRoute from './routes/lib.route.js';
 import mcRoute from './routes/mc.route.js';
 import canteenRoute from './routes/canteen.route.js';
 import cors from "cors";
+import cookieParser from 'cookie-parser';
 
+// Cookie parser middleware
 const app = express();
+app.use(cookieParser());
+
+
 
 dotenv.config();
 app.use(express.json());
