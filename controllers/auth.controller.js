@@ -88,6 +88,8 @@ export const login = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({ message: 'Invalid username' });
         }
+
+
         const validePassword = await bcrypt.compare(req.body.password, user.password);
 
         if (validePassword) {
@@ -99,7 +101,8 @@ export const login = async (req, res, next) => {
             res.cookie("access_token", token, { httpOnly: true }).status(200).json({
                 status: 200,
                 message: "Login Success",
-                data: user
+                ...user._doc, 
+                success: true
             })
         } else {
 
