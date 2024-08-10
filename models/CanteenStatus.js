@@ -15,6 +15,9 @@ const CanteenStatusSchema = new mongoose.Schema({
         '25-35': { type: Number, default: 0 },
         '35+': { type: Number, default: 0 }
     }
-});
+}, {
+    timestamps: true
+}
+);
 
 export default mongoose.model('CanteenStatus', CanteenStatusSchema);

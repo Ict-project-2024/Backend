@@ -13,8 +13,6 @@ import cookieParser from 'cookie-parser';
 const app = express();
 app.use(cookieParser());
 
-
-
 dotenv.config();
 app.use(express.json());
 
