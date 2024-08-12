@@ -16,27 +16,10 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
     }
 
     canteenStatus.votes[peopleRange] += 1;
-    
-    const currentTime = new Date();
-    currentTime.setHours(currentTime.getHours() + 5);
-    currentTime.setMinutes(currentTime.getMinutes() + 30);
-    canteenStatus.lastModified = currentTime.toLocaleString("en-US", { timeZone: "Asia/Colombo" });
+    canteenStatus.lastModified = new Date();
 
     await canteenStatus.save();
 };
-
-function getCurrentTimeInTimeZone(timeZone) {
-    return new Intl.DateTimeFormat('en-US', {
-        timeZone: timeZone,
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false
-    }).format(new Date());
-}
 
 export const getCanteenStatus = async (canteen, next) => {
     const currentDate = new Date().toISOString().slice(0, 10);
