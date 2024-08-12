@@ -50,7 +50,7 @@ mongoose
   )
   .then(() => {
     app.listen(process.env.PORT, () => {
-      console.log(`server is running on ${process.env.BASE_URL}:${process.env.PORT}`);
+      console.log(`API is running on ${process.env.BASE_URL}:${process.env.PORT}`);
     });
   })
   .catch(() => {

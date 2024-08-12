@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.post('/report', reportStatus);
 
-router.get('/status', viewStatus);
+router.post('/status', viewStatus);
 
 export default router;
