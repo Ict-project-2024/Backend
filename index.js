@@ -27,9 +27,9 @@ app.use(cors({
 
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
-app.use("/api/library",libRoute );
-app.use("/api/mc",mcRoute );
-app.use("/api/canteen",canteenRoute);
+app.use("/api/library", libRoute);
+app.use("/api/mc", mcRoute);
+app.use("/api/canteen", canteenRoute);
 
 
 app.use((obj, req, res, next) => {
@@ -39,7 +39,7 @@ app.use((obj, req, res, next) => {
     success: [200, 201, 204].some(a => a === obj.status) ? true : false,
     status: statusCode,
     message: message,
-    data:obj.data,
+    data: obj.data,
     stack: obj.stack
   })
 })
@@ -49,7 +49,6 @@ mongoose
     process.env.MONGO_URL
   )
   .then(() => {
-    console.log("Connected to database!");
     app.listen(process.env.PORT, () => {
       console.log(`server is running on ${process.env.BASE_URL}:${process.env.PORT}`);
     });
