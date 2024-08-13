@@ -19,6 +19,9 @@ const CanteenStatusSchema = new mongoose.Schema({
         type: Date,
         default: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" })
     }
-});
+}, {
+    timestamps: true
+}
+);
 
 export default mongoose.model('CanteenStatus', CanteenStatusSchema);
