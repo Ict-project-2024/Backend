@@ -56,7 +56,8 @@ export const viewTrafficStatus = async (req, res, next) => {
 
     return next(CreateSuccess(200, "Library traffic status", {
       currentOccupancy: status.currentOccupancy,
-      dailyTraffic
+      dailyTraffic,
+      lastModified: status.lastModified
     }));
   } catch (error) {
     return next(CreateError(500, error.message));

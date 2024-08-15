@@ -27,7 +27,7 @@ app.use(cors({
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/library", libRoute);
-app.use("/api/mc", mcRoute);
+app.use("/api/medical-center", mcRoute);
 app.use("/api/canteen", canteenRoute);
 app.use("/api/votes", voteRoute);
 

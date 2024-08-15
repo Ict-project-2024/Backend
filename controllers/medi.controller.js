@@ -32,7 +32,7 @@ export const exitMc = async (req, res, next) => {
 
     let status = await McStatus.findOne({ date: new Date().toISOString().slice(0, 10) });
     if (!status) {
-      return next(CreateError(404, "No library status found for today"));
+      return next(CreateError(404, "No medical center status found for today"));
     }
     status.currentOccupancy -= 1;
     await status.save();
@@ -54,9 +54,10 @@ export const viewTrafficStatus = async (req, res, next) => {
 
     const dailyTraffic = await getDailyTraffic(currentDate);
 
-    return next(CreateSuccess(200, "Library traffic status", {
+    return next(CreateSuccess(200, "Medical center traffic status", {
       currentOccupancy: status.currentOccupancy,
-      dailyTraffic
+      dailyTraffic,
+      lastModified: status.lastModified
     }));
   } catch (error) {
     return next(CreateError(500, error.message));
