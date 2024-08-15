@@ -1,8 +1,10 @@
 import express from 'express'
-import { getUserVotes } from '../controllers/votes.controller.js';
+import { getUserVotes, getAllVotes } from '../controllers/votes.controller.js';
 
 const router = express.Router();
 
 router.post('/get', getUserVotes);
+
+router.get('/all', getAllVotes);
 
 export default router;

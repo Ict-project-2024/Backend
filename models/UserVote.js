@@ -8,7 +8,7 @@ const UserVoteSchema = new mongoose.Schema({
     consecutiveWeeks: { type: Number, default: 0 },
     badges: {
         firstStep: { type: Boolean, default: false },
-        frequentContributor: { type: String, default: null }, // "Bronze" for 10, "Silver" for 50, "Gold" for 100
+        frequentContributor: { type: String, default: null },
         dailyContributor: { type: Boolean, default: false },
         weeklyWarrior: { type: Boolean, default: false },
         accuracyStar: { type: Boolean, default: false }

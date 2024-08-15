@@ -9,6 +9,7 @@ import canteenRoute from './routes/canteen.route.js';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
 import voteRoute from './routes/votes.route.js';
+import userRoute from './routes/user.route.js';
 
 // Cookie parser middleware
 const app = express();
@@ -30,7 +31,7 @@ app.use("/api/library", libRoute);
 app.use("/api/medical-center", mcRoute);
 app.use("/api/canteen", canteenRoute);
 app.use("/api/votes", voteRoute);
-
+app.use("/api/user/", userRoute);
 
 app.use((obj, req, res, next) => {
   const statusCode = obj.status || 500;

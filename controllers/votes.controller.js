@@ -17,3 +17,17 @@ export const getUserVotes = async (req, res, next) => {
     }
 };
 
+
+export const getAllVotes = async (req, res, next) => {
+    try {
+        let votes = await UserVote.find();
+
+        if (!votes) {
+            return next(CreateError(404, "No votes found"));
+        }
+
+        return next(CreateSuccess(200, "All votes data fetched successfully!", votes));
+    } catch (error) {
+        return next(CreateError(500, error.message));
+    }
+}
