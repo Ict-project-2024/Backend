@@ -8,6 +8,7 @@ import mcRoute from './routes/mc.route.js';
 import canteenRoute from './routes/canteen.route.js';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
+import voteRoute from './routes/votes.route.js';
 
 // Cookie parser middleware
 const app = express();
@@ -28,6 +29,7 @@ app.use("/api/auth", authRoute);
 app.use("/api/library", libRoute);
 app.use("/api/mc", mcRoute);
 app.use("/api/canteen", canteenRoute);
+app.use("/api/votes", voteRoute);
 
 
 app.use((obj, req, res, next) => {

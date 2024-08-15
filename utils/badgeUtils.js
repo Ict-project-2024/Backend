@@ -40,11 +40,11 @@ const assignBadges = (userVote) => {
 	userVote.lastVoteDate = now;
 };
 
-export const updateUserVotesAndBadges = async (userId, canteen, next) => {
-	let userVote = await UserVote.findOne({ userId: userId, canteen: canteen });
+export const updateUserVotesAndBadges = async (userId, next) => {
+	let userVote = await UserVote.findOne({ userId: userId});
 
 	if (!userVote) {
-		userVote = new UserVote({ userId, canteen });
+		userVote = new UserVote({ userId });
 	}
 
 	userVote.votes += 1;

@@ -7,7 +7,7 @@ export const reportStatus = async (req, res, next) => {
     const { userId, canteen, peopleRange } = req.body;
     try {
         await reportCanteenStatus(canteen, peopleRange, next);
-        await updateUserVotesAndBadges(userId, canteen, next);
+        await updateUserVotesAndBadges(userId, next);
         return next(CreateSuccess(200, "Canteen status reported successfully"));
     } catch (error) {
         return next(CreateError(500, error.message));

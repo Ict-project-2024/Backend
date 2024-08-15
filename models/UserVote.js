@@ -2,7 +2,6 @@ import mongoose from 'mongoose';
 
 const UserVoteSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    canteen: { type: String, required: true }, // "staff" or "student"
     votes: { type: Number, default: 0 },
     lastVoteDate: { type: Date, default: null },
     consecutiveDays: { type: Number, default: 0 },
