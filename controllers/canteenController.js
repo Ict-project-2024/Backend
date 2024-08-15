@@ -17,10 +17,10 @@ export const reportStatus = async (req, res, next) => {
 
 export const viewStatus = async (req, res, next) => {
     const { location } = req.body;
-
     try {
         const status = await getCanteenStatus(location, next);
         return next(CreateSuccess(200, "Canteen status retrieved successfully", status));
+        
     } catch (error) {
         return next(CreateError(500, error.message));
     }

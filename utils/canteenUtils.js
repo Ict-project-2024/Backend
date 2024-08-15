@@ -3,12 +3,11 @@ import { CreateError } from "../utils/error.js";
 import { CreateSuccess } from "../utils/success.js";
 
 export const reportCanteenStatus = async (canteen, peopleRange, next) => {
-    const currentDate = new Date();
-    const localDate = currentDate.toLocaleDateString();
-    let canteenStatus = await CanteenStatus.findOne({ date: localDate, canteen });
+    const currentDate = new Date().toISOString().slice(0, 10);
+    let canteenStatus = await CanteenStatus.findOne({ date: currentDate, canteen });
 
     if (!canteenStatus) {
-        canteenStatus = new CanteenStatus({ date: localDate, canteen });
+        canteenStatus = new CanteenStatus({ date: currentDate, canteen });
     }
 
     const validRanges = ["0-15", "15-25", "25-35", "35+"]; // Define valid ranges
@@ -20,12 +19,12 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
     canteenStatus.lastModified = new Date();
 
     await canteenStatus.save();
+    return next(CreateSuccess(200, "Canteen status reported successfully"));
 };
 
 export const getCanteenStatus = async (location, next) => {
     const currentDate = new Date().toISOString().slice(0, 10);
-    const status = await CanteenStatus.findOne({ date: currentDate, canteen: location });
-
+    const status = await CanteenStatus.findOne({ date: currentDate, canteen: location })
 
     if (!status) {
         return next(CreateError(404, "No canteen status available for today"));
