@@ -7,15 +7,16 @@ export const enterMc = async (req, res, next) => {
   const { teNumber, phoneNumber } = req.body;
 
   try {
-    await verifyStudent(teNumber, phoneNumber, next);
+    await verifyStudent(teNumber.toLowerCase(), phoneNumber, next);
 
-    await logEntry(teNumber, phoneNumber);
+    await logEntry(teNumber.toLowerCase(), phoneNumber);
 
     let status = await McStatus.findOne({ date: new Date().toISOString().slice(0, 10) });
     if (!status) {
       status = new McStatus();
     }
     status.currentOccupancy += 1;
+    status.lastModified = new Date();
     await status.save();
 
     return next(CreateSuccess(200, "Entry logged successfully"));
@@ -28,13 +29,14 @@ export const exitMc = async (req, res, next) => {
   const { teNumber } = req.body;
 
   try {
-    await logExit(teNumber);
+    await logExit(teNumber.toLowerCase());
 
     let status = await McStatus.findOne({ date: new Date().toISOString().slice(0, 10) });
     if (!status) {
       return next(CreateError(404, "No medical center status found for today"));
     }
     status.currentOccupancy -= 1;
+    status.lastModified = new Date();
     await status.save();
 
     return next(CreateSuccess(200, "Exit logged successfully"));
@@ -52,7 +54,7 @@ export const viewTrafficStatus = async (req, res, next) => {
       return next(CreateError(404, "No traffic data available for today"));
     }
 
-    const dailyTraffic = await getDailyTraffic(currentDate);
+    const dailyTraffic = await getDailyTraffic(currentDate, "Medical Center");
 
     return next(CreateSuccess(200, "Medical center traffic status", {
       currentOccupancy: status.currentOccupancy,
