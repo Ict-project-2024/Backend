@@ -21,7 +21,7 @@ export const getUserVotes = async (req, res, next) => {
 export const getAllVotes = async (req, res, next) => {
     try {
         let votes = await UserVote.find();
-
+        console.log(votes);
         if (!votes) {
             return next(CreateError(404, "No votes found"));
         }

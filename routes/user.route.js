@@ -3,6 +3,6 @@ import { retrieveUsers } from '../controllers/user.controller.js';
 
 const router = express.Router();
 
-router.get('/all', retrieveUsers);
+router.post('/', retrieveUsers);
 
 export default router;
