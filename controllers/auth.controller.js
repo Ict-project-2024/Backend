@@ -11,16 +11,17 @@ import { sendVerificationEmail } from "../utils/emailUtils.js"
 export const register = async (req, res, next) => {
 
     try {
+        console.log(req.body);
         const role = await Role.find({ role: 'user' });
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(req.body.password, salt);
         const newUser = new User({
             firstName: req.body.firstName,
             lastName: req.body.lastName,
-            email: req.body.email,
-            TeNumber: req.body.teNumber,
+            email: req.body.universityEmail,
+            TeNumber: req.body.registrationNumber,
             gender: req.body.gender,
-            mobileNumber:req.body.mobileNumber,
+            mobileNumber: req.body.phoneNumber,
             password: hashPassword,
             roles: role
         });
