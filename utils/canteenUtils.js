@@ -17,21 +17,19 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
     }
 
     canteenStatus.votes[peopleRange] += 1;
+    canteenStatus.lastModified = new Date();
+
     await canteenStatus.save();
+    return next(CreateSuccess(200, "Canteen status reported successfully"));
 };
 
-export const getCanteenStatus = async (canteen, next) => {
-    const currentDate = new Date();
-    const localDate = currentDate.toLocaleDateString();
-    const status = await CanteenStatus.findOne({ date: localDate, canteen });
+export const getCanteenStatus = async (location, next) => {
+    const currentDate = new Date().toISOString().slice(0, 10);
+    const status = await CanteenStatus.findOne({ date: currentDate, canteen: location })
+
 
     if (!status) {
         return next(CreateError(404, "No canteen status available for today"));
     }
-    const response = {
-        votes: status.votes,
-        lastModified: status.updatedAt
-      };
-    
-    return response ;
+    return status;
 };

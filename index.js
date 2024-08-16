@@ -8,6 +8,8 @@ import mcRoute from './routes/mc.route.js';
 import canteenRoute from './routes/canteen.route.js';
 import cors from "cors";
 import cookieParser from 'cookie-parser';
+import voteRoute from './routes/votes.route.js';
+import userRoute from './routes/user.route.js';
 
 // Cookie parser middleware
 const app = express();
@@ -25,10 +27,11 @@ app.use(cors({
 
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
-app.use("/api/library",libRoute );
-app.use("/api/mc",mcRoute );
-app.use("/api/canteen",canteenRoute);
-
+app.use("/api/library", libRoute);
+app.use("/api/medical-center", mcRoute);
+app.use("/api/canteen", canteenRoute);
+app.use("/api/votes", voteRoute);
+app.use("/api/user/", userRoute);
 
 app.use((obj, req, res, next) => {
   const statusCode = obj.status || 500;
@@ -37,7 +40,7 @@ app.use((obj, req, res, next) => {
     success: [200, 201, 204].some(a => a === obj.status) ? true : false,
     status: statusCode,
     message: message,
-    data:obj.data,
+    data: obj.data,
     stack: obj.stack
   })
 })
@@ -47,9 +50,8 @@ mongoose
     process.env.MONGO_URL
   )
   .then(() => {
-    console.log("Connected to database!");
     app.listen(process.env.PORT, () => {
-      console.log(`server is running on ${process.env.BASE_URL}:${process.env.PORT}`);
+      console.log(`API is running on ${process.env.BASE_URL}:${process.env.PORT}`);
     });
   })
   .catch(() => {

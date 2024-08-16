@@ -14,6 +14,10 @@ const CanteenStatusSchema = new mongoose.Schema({
         '15-25': { type: Number, default: 0 },
         '25-35': { type: Number, default: 0 },
         '35+': { type: Number, default: 0 }
+    },
+    lastModified: {
+        type: Date,
+        default: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" })
     }
 }, {
     timestamps: true
