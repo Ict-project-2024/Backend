@@ -1,5 +1,5 @@
 import McStatus from "../models/McStatus.js";
-import { verifyStudent, logEntry, logExit, getDailyTraffic } from "../utils/common.js";
+import { verifyStudent, logEntry, logExit, getDailyTraffic, accessHistory } from "../utils/common.js";
 import { CreateError } from "../utils/error.js";
 import { CreateSuccess } from "../utils/success.js";
 
@@ -16,6 +16,7 @@ export const enterMc = async (req, res, next) => {
       status = new McStatus();
     }
     status.currentOccupancy += 1;
+    status.entrances += 1; // Increment the number of entrances; for admin view: nivindulakshitha
     status.lastModified = new Date();
     await status.save();
 
@@ -66,3 +67,12 @@ export const viewTrafficStatus = async (req, res, next) => {
   }
 };
 
+
+export const viewHistory = async (req, res, next) => {
+    try {
+        const history = await accessHistory("Medical Center");
+        return next(CreateSuccess(200, "Library access history", history));
+    } catch (error) {
+        return next(CreateError(500, error.message));
+    }
+};

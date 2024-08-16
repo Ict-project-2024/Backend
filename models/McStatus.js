@@ -1,7 +1,10 @@
 import mongoose from 'mongoose'
 
 const McStatusSchema = new mongoose.Schema({
-
+    entrances: {
+        type: Number,
+        default: 0
+    },
     currentOccupancy: {
         type: Number,
         default: 0
