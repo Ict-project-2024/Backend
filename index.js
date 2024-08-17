@@ -25,6 +25,10 @@ app.use(cors({
   origin: '*',
 }));
 
+app.use("/", () => {
+   res.status(200).send("Server is responding...")
+})
+
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/library", libRoute);
