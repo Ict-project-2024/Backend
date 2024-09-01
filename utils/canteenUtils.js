@@ -4,7 +4,7 @@ import { CreateSuccess } from "../utils/success.js";
 
 export const reportCanteenStatus = async (canteen, peopleRange, next) => {
     const currentDate = new Date();
-    const localDate = currentDate.toLocaleDateString();
+    const localDate = new Date().toISOString().slice(0, 10);
     let canteenStatus = await CanteenStatus.findOne({ date: localDate, canteen });
 
     if (!canteenStatus) {

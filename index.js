@@ -33,6 +33,10 @@ app.use("/api/canteen", canteenRoute);
 app.use("/api/votes", voteRoute);
 app.use("/api/user/", userRoute);
 
+app.use("/", (req, res) => {
+  res.send("API is running...");
+});
+
 app.use((obj, req, res, next) => {
   const statusCode = obj.status || 500;
   const message = obj.message || "something went wrong..";
@@ -51,9 +55,9 @@ mongoose
   )
   .then(() => {
     app.listen(process.env.PORT, () => {
-      console.log(`API is running on ${process.env.BASE_URL}:${process.env.PORT}`);
+      console.log(`API is running on http://localhost:${process.env.PORT}`);
     });
   })
-  .catch(() => {
-    console.log("Connection failed!");
+  .catch((error) => {
+    console.log("Connection failed!", error);
   });

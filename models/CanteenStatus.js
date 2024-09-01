@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 const CanteenStatusSchema = new mongoose.Schema({
     date: {
         type: String,
-        required: true
+        required: true,
+        default: new Date().toISOString().slice(0, 10)
     },
     canteen: {
         type: String,
