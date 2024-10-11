@@ -1,5 +1,5 @@
 import LibraryStatus from "../models/LibStatus.js";
-import { verifyStudent, logEntry, logExit, getDailyTraffic, accessHistory } from "../utils/common.js";
+import { verifyStudent, logEntry, logExit, getDailyTraffic, accessHistory, userAccessHistory } from "../utils/common.js";
 import { CreateError } from "../utils/error.js";
 import { CreateSuccess } from "../utils/success.js";
 
@@ -70,6 +70,18 @@ export const viewTrafficStatus = async (req, res, next) => {
 export const viewHistory = async (req, res, next) => {
   try {
     const history = await accessHistory("Library");
+    return next(CreateSuccess(200, "Library access history", history));
+  } catch (error) {
+    return next(CreateError(500, error.message));
+  }
+};
+
+
+export const viewUserAccess = async (req, res, next) => {
+  const dateOptions = req.body;
+
+  try {
+    const history = await userAccessHistory("Library", dateOptions);
     return next(CreateSuccess(200, "Library access history", history));
   } catch (error) {
     return next(CreateError(500, error.message));

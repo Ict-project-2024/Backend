@@ -1,5 +1,5 @@
 import McStatus from "../models/McStatus.js";
-import { verifyStudent, logEntry, logExit, getDailyTraffic, accessHistory } from "../utils/common.js";
+import { verifyStudent, logEntry, logExit, getDailyTraffic, accessHistory, userAccessHistory } from "../utils/common.js";
 import { CreateError } from "../utils/error.js";
 import { CreateSuccess } from "../utils/success.js";
 
@@ -75,4 +75,15 @@ export const viewHistory = async (req, res, next) => {
     } catch (error) {
         return next(CreateError(500, error.message));
     }
+};
+
+export const viewUserAccess = async (req, res, next) => {
+  const dateOptions = req.body;
+
+  try {
+    const history = await userAccessHistory("Medical Center", dateOptions);
+    return next(CreateSuccess(200, "Medical center access history", history));
+  } catch (error) {
+    return next(CreateError(500, error.message));
+  }
 };
