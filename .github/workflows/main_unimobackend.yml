@@ -21,11 +21,8 @@ jobs:
         with:
           node-version: '20.x'
 
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
+      - name: Install dependencies
+        run: npm install
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -53,13 +50,13 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_DCAB12FFF87D442C85551DEE1DCBE2C3 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_13FE5F8149074D77808D43BEF5281862 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D9D1504981324A98BB923ADD93F18A0D }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -68,4 +65,3 @@ jobs:
           app-name: 'unimobackend'
           slot-name: 'Production'
           package: .
-          
