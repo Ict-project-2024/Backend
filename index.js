@@ -19,8 +19,6 @@ dotenv.config();
 app.use(express.json());
 
 // CORS middleware configuration
-app.use(cors());
-
 app.use(cors({
 	origin: '*',
 }));
@@ -72,23 +70,21 @@ app.use((obj, req, res, next) => {
 })
 
 app.listen(process.env.PORT, () => {
-	console.log(`Server is running on http://localhost:${process.env.PORT}`);
+	console.log(`Server is running on ${process.env.PORT}`);
 });
 
-function databaseConnector(res) {
-	return new Promise((resolve, reject) => {
-		mongoose.connect(
-			process.env.MONGO_URL
-		).then(() => {
-			resolve(true);
-		}).catch((error) => {
-			console.log("Connection failed!", error);
-			return res.status(500).json({
-				success: false,
-				error: error.message,
-				code: error.code,
-				message: "Failed to connect to the database."
-			})
-		});
-	});
-}
+async function databaseConnector(retries = 5, delay = 2000) {
+	while (retries) {
+	  try {
+		await mongoose.connect(process.env.MONGO_URL);
+		console.log("Connected to the database");
+		return true;
+	  } catch (err) {
+		console.error("Failed to connect to the database. Retrying...", retries);
+		retries -= 1;
+		await new Promise(res => setTimeout(res, delay));
+	  }
+	}
+	return false;
+  }
+  

@@ -1,20 +1,15 @@
-# Use a lightweight Node.js runtime
-FROM node:16-alpine
-
-# Set the working directory
+# Stage 1: Build
+FROM node:18-alpine AS build
 WORKDIR /app
-
-# Copy package.json and package-lock.json
 COPY package*.json ./
-
-# Install production dependencies
-RUN npm install --production
-
-# Copy the rest of the application code
+RUN npm install
 COPY . .
 
-# Expose the backend port
+# Stage 2: Production
+FROM node:18-alpine
+WORKDIR /app
+COPY --from=build /app .
+ENV NODE_ENV=production
 EXPOSE 3000
-
-# Start the backend server
 CMD ["npm", "start"]
+
