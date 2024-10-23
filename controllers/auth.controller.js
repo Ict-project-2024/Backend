@@ -22,6 +22,7 @@ export const register = async (req, res, next) => {
             gender: req.body.gender,
             mobileNumber: req.body.phoneNumber,
             password: hashPassword,
+            profileImage: req.body.headshotUrl,
             roles: role
         });
 

@@ -10,6 +10,7 @@ import cors from "cors";
 import cookieParser from 'cookie-parser';
 import voteRoute from './routes/votes.route.js';
 import userRoute from './routes/user.route.js';
+import saasToken from './routes/saasToken.route.js';
 
 // Cookie parser middleware
 const app = express();
@@ -31,6 +32,7 @@ app.use("/api/medical-center", mcRoute);
 app.use("/api/canteen", canteenRoute);
 app.use("/api/votes", voteRoute);
 app.use("/api/user/", userRoute);
+app.use('/api/sas-token',saasToken);
 
 app.get("/", (req, res) => {
 	res.send("Server is responding...");
