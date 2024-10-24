@@ -4,11 +4,10 @@ import { CreateError } from "../utils/error.js";
 import { CreateSuccess } from "../utils/success.js";
 
 export const enterLibrary = async (req, res, next) => {
-  const { teNumber, phoneNumber} = req.body;
+  const { teNumber, phoneNumber } = req.body;
+  console.log(teNumber, phoneNumber);
 
   try {
-    await verifyStudent(teNumber.toLowerCase(), phoneNumber, next);
-
     await logEntry(teNumber.toLowerCase(), phoneNumber, "Library");
 
     let status = await LibraryStatus.findOne({ date: new Date().toISOString().slice(0, 10) });

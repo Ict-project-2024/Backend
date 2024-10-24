@@ -22,7 +22,7 @@ const UserSchema = mongoose.Schema(
         verificationToken: String,
         verificationTokenExpires: Date,
 
-        TeNumber: {
+        teNumber: {
             type: String,
             required: true
         },
