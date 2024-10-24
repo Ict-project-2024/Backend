@@ -1,10 +1,12 @@
 import express from 'express'
-import { enterLibrary, exitLibrary, viewTrafficStatus } from '../controllers/Lib.controller.js';
+import { enterLibrary, exitLibrary, viewTrafficStatus, viewHistory, viewUserAccess } from '../controllers/Lib.controller.js';
 
 const router = express.Router();
 
 router.post('/enter', enterLibrary);
 router.post('/exit', exitLibrary);
-router.get('/status', viewTrafficStatus);
+router.post('/status', viewTrafficStatus);
+router.get('/history', viewHistory);
+router.post('/useraccess', viewUserAccess);
 
 export default router;

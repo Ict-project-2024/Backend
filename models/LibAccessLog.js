@@ -10,7 +10,8 @@ const accessLogSchema = new mongoose.Schema({
         default: Date.now
     }, 
     exitTime: {
-        type: Date
+        type: Date,
+        default: null
     },
     phoneNumber: {
         type: String,

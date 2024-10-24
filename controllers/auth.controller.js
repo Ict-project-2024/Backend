@@ -11,7 +11,6 @@ import { sendVerificationEmail } from "../utils/emailUtils.js"
 export const register = async (req, res, next) => {
 
     try {
-        console.log(req.body);
         const role = await Role.find({ role: 'user' });
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -19,7 +18,7 @@ export const register = async (req, res, next) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.universityEmail,
-            TeNumber: req.body.registrationNumber,
+            TeNumber: req.body.registrationNumber.toLowerCase(),
             gender: req.body.gender,
             mobileNumber: req.body.phoneNumber,
             password: hashPassword,
@@ -88,6 +87,8 @@ export const login = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({ message: 'Invalid username' });
         }
+
+
         const validePassword = await bcrypt.compare(req.body.password, user.password);
 
         if (validePassword) {
@@ -99,7 +100,8 @@ export const login = async (req, res, next) => {
             res.cookie("access_token", token, { httpOnly: true }).status(200).json({
                 status: 200,
                 message: "Login Success",
-                data: user
+                ...user._doc, 
+                success: true
             })
         } else {
 
