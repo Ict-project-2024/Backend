@@ -71,7 +71,7 @@ export const registerAdmin = async (req, res, next) => {
     }
 }
 
-export const login = async (req, res, next) => {
+export const login = async (req, res, next) => { 
     try {
         const email = req.body.email;
         const password = req.body.password;
@@ -83,40 +83,34 @@ export const login = async (req, res, next) => {
         // Find user by email
         const user = await User.findOne({ email: email }).populate("roles", "role");
 
-        const { roles } = user;
-
         if (!user) {
-            return res.status(401).json({ message: 'Invalid username' });
+            return next(CreateError(401, 'Invalid username or password'));
         }
 
+        // Check if email is verified
+        if (!user.isVerified) {
+            return next(CreateError(403, 'Email not verified. Please check your email to verify your account.'));
+        }
 
-        const validePassword = await bcrypt.compare(req.body.password, user.password);
+        const validPassword = await bcrypt.compare(password, user.password);
 
-        if (validePassword) {
-            // return res.status(201).json({ message: 'login success..'} );
+        if (validPassword) {
+            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, roles: user.roles }, process.env.JWT_SECRET);
 
-            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, roles: roles }, process.env.JWT_SECRET)
-
-            // return next(CreateSuccess(200,"User login succesfull.."));
             res.cookie("access_token", token, { httpOnly: true }).status(200).json({
                 status: 200,
                 message: "Login Success",
-                ...user._doc, 
+                ...user._doc,
                 success: true
-            })
+            });
         } else {
-
-            // return res.status(401).json({ message: 'Invalid username or password'});
             return next(CreateError(400, "Invalid username or password"));
         }
-
-        // return res.status(401).json({ message: 'Invalid username or password'});
-
     } catch (error) {
         return next(CreateError(400, "Invalid username"));
-
     }
 }
+
 
 export const verifyEmail = async (req, res, next) => {
 
