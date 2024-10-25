@@ -136,10 +136,9 @@ export const verifyEmail = async (req, res, next) => {
         user.verificationTokenExpires = undefined;
         await user.save();
 
-        // res.send('Email verified successfully!');
-        return next(CreateSuccess(200, "Email verified successfully!", user));
+        return next(CreateSuccess(200, "Email verified successfully!"));
     } catch (error) {
-        res.status(400).send({ error: error.message });
+        return next(CreateError(500, "Server error. Please try again later."));
     }
 
 }

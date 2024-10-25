@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 
 export const sendVerificationEmail = async (email, token) => {
-    const verificationLink = `${process.env.BASE_URL}/api/auth/verify-email?token=${token}`;
+    const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
 
     // Configure the Mailjet SMTP transport
     const transporter = nodemailer.createTransport({
@@ -15,7 +15,7 @@ export const sendVerificationEmail = async (email, token) => {
     });
 
     const mailOptions = {
-        from: 'ict21929@fot.sjp.ac.lk', // Replace with your sender email
+        from: process.env.SENDER_EMAIL, // Replace with your sender email
         to: email,
         subject: 'Verify Your Email Address',
         text: `Hello, Thank you for registering. Please verify your email address by clicking the link below:
