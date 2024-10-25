@@ -7,7 +7,7 @@ import McStatus from "../models/McStatus.js";
 
 
 export const verifyStudent = async (teNumber, phoneNumber, next) => {
-	let student = await Student.findOne({ TeNumber: teNumber.toLowerCase() });
+	let student = await Student.findOne({ teNumber: teNumber.toLowerCase() });
 	if (!student) {
 		return next(CreateError(400, "No user found.. redirect to register page"));
 	}

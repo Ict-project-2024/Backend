@@ -18,7 +18,7 @@ export const register = async (req, res, next) => {
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             email: req.body.universityEmail,
-            TeNumber: req.body.registrationNumber.toLowerCase(),
+            teNumber: req.body.registrationNumber.toLowerCase(),
             gender: req.body.gender,
             mobileNumber: req.body.phoneNumber,
             password: hashPassword,
