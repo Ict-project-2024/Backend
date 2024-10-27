@@ -9,8 +9,27 @@ import { sendVerificationEmail } from "../utils/emailUtils.js"
 
 
 export const register = async (req, res, next) => {
-
     try {
+        const existingUser = await User.findOne({ email: req.body.universityEmail });
+
+        if (existingUser) {
+            if (existingUser.isVerified) {
+                return next(CreateSuccess(201, "User already exists. Please log in."));
+            } else {
+                // User exists but is not verified, generate a new verification token
+                existingUser.verificationToken = crypto.randomBytes(32).toString('hex');
+                existingUser.verificationTokenExpires = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+
+                await existingUser.save();
+
+                // Send verification email
+                await sendVerificationEmail(existingUser.email, existingUser.verificationToken);
+
+                return next(CreateSuccess(200, "User already exists but is not verified. A new verification email has been sent."));
+            }
+        }
+
+        // User does not exist, proceed with registration
         const role = await Role.find({ role: 'user' });
         const salt = await bcrypt.genSalt(10);
         const hashPassword = await bcrypt.hash(req.body.password, salt);
@@ -35,15 +54,12 @@ export const register = async (req, res, next) => {
         // Send verification email
         await sendVerificationEmail(newUser.email, newUser.verificationToken);
 
-
-        // res.status(200).json(newUser);
-        return next(CreateSuccess(200, "User registration succesfull! Please check your email to verify your account."));
-
+        return next(CreateSuccess(200, "User registration successful! Please check your email to verify your account."));
     } catch (error) {
         res.status(500).json({ message: error.message });
-        // return next(CreateError(400, "bad request"));
     }
-}
+};
+
 
 
 export const registerAdmin = async (req, res, next) => {
