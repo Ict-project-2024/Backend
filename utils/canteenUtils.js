@@ -29,7 +29,7 @@ export const getCanteenStatus = async (location, next) => {
 
 
     if (!status) {
-        return next(CreateError(404, "No canteen status available for today"));
+        return next(CreateError(204, "No canteen status available for today"));
     }
     return status;
 };
