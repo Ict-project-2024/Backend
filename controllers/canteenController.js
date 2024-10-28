@@ -16,7 +16,7 @@ export const reportStatus = async (req, res, next) => {
 };
 
 export const viewStatus = async (req, res, next) => {
-    const { location } = req.body;
+    const location = req.body.location;
     try {
         const status = await getCanteenStatus(location, next);
         return next(CreateSuccess(200, "Canteen status retrieved successfully", status));

@@ -25,8 +25,8 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
 
 export const getCanteenStatus = async (location, next) => {
     const currentDate = new Date().toISOString().slice(0, 10);
-    const status = await CanteenStatus.findOne({ date: currentDate, canteen: location })
 
+    const status = await CanteenStatus.findOne({ date: currentDate, canteen: location })
 
     if (!status) {
         return next(CreateError(204, "No canteen status available for today"));
