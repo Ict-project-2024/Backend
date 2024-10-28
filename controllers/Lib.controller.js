@@ -33,7 +33,7 @@ export const exitLibrary = async (req, res, next) => {
 
     let status = await LibraryStatus.findOne({ date: new Date().toISOString().slice(0, 10) });
     if (!status) {
-      return next(CreateError(404, "No library status found for today"));
+      return next(CreateError(204, "No library status found for today"));
     }
     status.currentOccupancy -= 1;
     status.lastModified = new Date();
@@ -51,7 +51,7 @@ export const viewTrafficStatus = async (req, res, next) => {
     const status = await LibraryStatus.findOne({ date: currentDate });
 
     if (!status) {
-      return next(CreateError(404, "No traffic data available for today"));
+      return next(CreateError(204, "No traffic data available for today"));
     }
 
     const dailyTraffic = await getDailyTraffic(currentDate, "Library");
