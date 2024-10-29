@@ -11,7 +11,7 @@ export const enterMc = async (req, res, next) => {
 
     await logEntry(teNumber.toLowerCase(), phoneNumber);
 
-    let status = await McStatus.findOne({ date: new Date().toISOString().slice(0, 10) });
+    let status = await McStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10) });
     if (!status) {
       status = new McStatus();
     }
@@ -32,7 +32,7 @@ export const exitMc = async (req, res, next) => {
   try {
     await logExit(teNumber.toLowerCase());
 
-    let status = await McStatus.findOne({ date: new Date().toISOString().slice(0, 10) });
+    let status = await McStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10) });
     if (!status) {
       return next(CreateError(204, "No medical center status found for today"));
     }
@@ -47,7 +47,7 @@ export const exitMc = async (req, res, next) => {
 };
 
 export const viewTrafficStatus = async (req, res, next) => {
-  const currentDate = new Date().toISOString().slice(0, 10);
+  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
   try {
     const status = await McStatus.findOne({ date: currentDate });
 
