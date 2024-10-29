@@ -11,7 +11,7 @@ const McStatusSchema = new mongoose.Schema({
     },
     date: {
         type: String,
-        default: new Date().toISOString().slice(0, 10)
+        default: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10)
         
     },
     lastModified: {

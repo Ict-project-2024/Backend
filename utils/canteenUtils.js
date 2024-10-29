@@ -4,7 +4,7 @@ import { CreateSuccess } from "../utils/success.js";
 
 export const reportCanteenStatus = async (canteen, peopleRange, next) => {
     const currentDate = new Date();
-    const localDate = new Date().toISOString().slice(0, 10);
+    const localDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
     let canteenStatus = await CanteenStatus.findOne({ date: localDate, canteen });
 
     if (!canteenStatus) {
@@ -24,12 +24,12 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
 };
 
 export const getCanteenStatus = async (location, next) => {
-    const currentDate = new Date().toISOString().slice(0, 10);
+    const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
 
     const status = await CanteenStatus.findOne({ date: currentDate, canteen: location })
 
     if (!status) {
-        return next(CreateError(404, "No canteen status available for today"));
+        return next(CreateError(204, "No canteen status available for today"));
     }
     return status;
 };
