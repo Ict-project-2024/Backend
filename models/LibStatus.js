@@ -10,7 +10,7 @@ const libraryStatusSchema = new mongoose.Schema({
         default: 0
     },
     date: {
-        type: String,
+        type: Date,
         default: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10)
         
     },

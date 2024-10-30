@@ -17,7 +17,8 @@ export const enterMc = async (req, res, next) => {
     }
     status.currentOccupancy += 1;
     status.entrances += 1; // Increment the number of entrances; for admin view: nivindulakshitha
-    status.lastModified = new Date();
+    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+    status.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" })
     await status.save();
 
     return next(CreateSuccess(200, "Entry logged successfully"));
@@ -37,7 +38,8 @@ export const exitMc = async (req, res, next) => {
       return next(CreateError(204, "No medical center status found for today"));
     }
     status.currentOccupancy -= 1;
-    status.lastModified = new Date();
+    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10)
+    status.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
     await status.save();
 
     return next(CreateSuccess(200, "Exit logged successfully"));
