@@ -2,7 +2,7 @@ import McStatus from "../models/McStatus.js";
 import { verifyStudent, logEntry, logExit, getDailyTraffic, accessHistory, userAccessHistory } from "../utils/common.js";
 import { CreateError } from "../utils/error.js";
 import { CreateSuccess } from "../utils/success.js";
-import Doctor from "../models/DoctorMc.js";
+
 
 export const enterMc = async (req, res, next) => {
   const { teNumber, phoneNumber } = req.body;
@@ -89,36 +89,42 @@ export const viewUserAccess = async (req, res, next) => {
   }
 };
 
-
 export const updateDoctorAvailability = async (req, res, next) => {
   try {
-    
     let { isAvailable } = req.body;
 
-    // Check if the `isAvailable` field is a string
+    // Convert `isAvailable` to a boolean if it’s a string
     if (typeof isAvailable === "string") {
-      // Convert it to a boolean
       isAvailable = isAvailable.toLowerCase() === 'true';
     }
 
-    // Update the doctor's availability or create a new document if it doesn't exist
-    const updatedDoctor = await Doctor.findOneAndUpdate(
-      {}, // Match the first doctor document (or create one if none exist)
-      { isAvailable }, // Update the `isAvailable` field
-      { new: true, upsert: true } // Return the updated document and create if doesn't exist
+    const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+
+    // Find and update the document that matches the current date
+    const status = await McStatus.findOneAndUpdate(
+      { date: currentDate },   // Match the document with today’s date
+      { isAvailable}, // Update `isAvailable` 
+      { new: true, upsert: true } // Return updated document, create if it doesn’t exist
     );
 
-    // Return the updated doctor's availability status
-    return next(CreateSuccess(200, 'Doctor marked succesfully',{isAvailable: updatedDoctor.isAvailable}));
+    if (!status) {
+      return next(CreateError(204, "No status available for today."));
+    }
+
+    return next(CreateSuccess(200, 'Doctor availability updated successfully', { isAvailable: status.isAvailable }));
   } catch (error) {
     next(CreateError(500, error.message));
   }
 };
 
 
+
 export const getDoctorAvailability = async (req, res, next) => {
+
+  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+
   try {
-    const doctor = await Doctor.findOne();
+    const doctor = await McStatus.findOne({ date: currentDate });
 
     if (!doctor) {
       return res.status(404).json({ message: "Doctor availability status not found" });
