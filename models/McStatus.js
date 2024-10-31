@@ -15,7 +15,7 @@ const McStatusSchema = new mongoose.Schema({
 
     },
     isAvailable: {
-        type: String,
+        type: Boolean,
         default: false
     },
     lastModified: {

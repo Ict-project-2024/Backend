@@ -26,12 +26,11 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
 
     // Add the new vote
     canteenStatus.votes[peopleRange] += 1;
-    canteenStatus.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }) // Update lastModified to now
+    canteenStatus.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
 
     await canteenStatus.save();
     return next(CreateSuccess(200, "Canteen status reported successfully"));
 };
-
 
 export const getCanteenStatus = async (location, next) => {
 
