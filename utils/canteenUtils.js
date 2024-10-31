@@ -34,8 +34,13 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
 
 
 export const getCanteenStatus = async (location, next) => {
-    const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
-    const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000); // 30 minutes ago
+
+    const currentTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
+
+    const currentDate = currentTime.slice(0, 10);
+    const thirtyMinutesAgo = new Date(currentTime.getTime() - 30 * 60 * 1000);
+
+    //const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000); // 30 minutes ago
 
     try {
         // Find today's document for the specified canteen
@@ -52,7 +57,7 @@ export const getCanteenStatus = async (location, next) => {
         if (status.lastModified >= thirtyMinutesAgo) {
             return status; // Return the canteen status if it was last updated more than 30 minutes ago
         } else {
-            
+
             return next(CreateError(204));
         }
     } catch (error) {
