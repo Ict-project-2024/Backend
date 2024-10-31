@@ -3,7 +3,6 @@ import { CreateError } from "../utils/error.js";
 import { CreateSuccess } from "../utils/success.js";
 
 export const reportCanteenStatus = async (canteen, peopleRange, next) => {
-    const currentDate = new Date();
     const localDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
     let canteenStatus = await CanteenStatus.findOne({ date: localDate, canteen });
 
@@ -17,7 +16,7 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
     }
 
     canteenStatus.votes[peopleRange] += 1;
-    canteenStatus.lastModified = new Date();
+    canteenStatus.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
 
     await canteenStatus.save();
     return next(CreateSuccess(200, "Canteen status reported successfully"));
