@@ -32,7 +32,6 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
     return next(CreateSuccess(200, "Canteen status reported successfully"));
 };
 
-
 export const getCanteenStatus = async (location, next) => {
     const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
     const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000); // 30 minutes ago
