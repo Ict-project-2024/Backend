@@ -50,7 +50,8 @@ export const exitMc = async (req, res, next) => {
 };
 
 export const viewTrafficStatus = async (req, res, next) => {
-  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 9);
+
   try {
     const status = await McStatus.findOne({ date: currentDate });
 
@@ -65,6 +66,7 @@ export const viewTrafficStatus = async (req, res, next) => {
       dailyTraffic,
       lastModified: status.lastModified
     }));
+
   } catch (error) {
     return next(CreateError(500, error.message));
   }
@@ -123,19 +125,20 @@ export const updateDoctorAvailability = async (req, res, next) => {
 
 export const getDoctorAvailability = async (req, res, next) => {
 
-  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 9);
 
   try {
     const doctor = await McStatus.findOne({ date: currentDate });
 
-    if (!doctor) {
-      return res.status(404).json({ message: "Doctor availability status not found" });
-    }
 
+    if (!doctor) {
+      return res.status(204).json({ message: "Doctor availability status not found" });
+    }
+    
     return next(CreateSuccess(200, "Doctor availability status", {
       isAvailable: doctor.isAvailable
-
     }));
+
   } catch (error) {
     next(CreateError(500, error.message));
   }
