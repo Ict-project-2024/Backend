@@ -76,7 +76,7 @@ export const viewTrafficStatus = async (req, res, next) => {
 export const viewHistory = async (req, res, next) => {
   try {
     const history = await accessHistory("Medical Center");
-    return next(CreateSuccess(200, "Library access history", history));
+    return next(CreateSuccess(200, "Medical Center access history", history));
   } catch (error) {
     return next(CreateError(500, error.message));
   }
