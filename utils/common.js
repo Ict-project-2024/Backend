@@ -107,7 +107,7 @@ export const userAccessHistory = async (location, dateOptions) => {
 	}
 
 	const sortStage = {
-		$sort: { entryTime: 1 } // 1 for ascending order, -1 for descending order
+		$sort: { entryTime: -1 } // 1 for ascending order, -1 for descending order
 	};
 
 	// Create pipeline, only add $match stage if there are filtering conditions
