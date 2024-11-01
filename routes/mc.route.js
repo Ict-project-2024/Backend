@@ -8,8 +8,8 @@ router.post('/exit', exitMc);
 router.post('/status', viewTrafficStatus);
 router.get('/history', viewHistory);
 router.post('/useraccess', viewUserAccess);
-router.put('/doctor-availability', updateDoctorAvailability);
 router.get('/doctor-availability', getDoctorAvailability);
+router.put('/doctor-availability', updateDoctorAvailability);
 
 
 export default router;

@@ -41,12 +41,9 @@ export const sendVerificationEmail = async (email, token) => {
 
     };
 
-    // Send the email
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.error('Failed to send email:', error.message);
-        } else {
-            console.log('Email sent successfully:', info.response);
         }
     });
 };
