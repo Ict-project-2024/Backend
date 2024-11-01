@@ -12,13 +12,13 @@ export const enterMc = async (req, res, next) => {
 
     await logEntry(teNumber.toLowerCase(), phoneNumber);
 
-    let status = await McStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10) });
+    let status = await McStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0] });
     if (!status) {
       status = new McStatus();
     }
     status.currentOccupancy += 1;
     status.entrances += 1; // Increment the number of entrances; for admin view: nivindulakshitha
-    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
     status.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" })
     await status.save();
 
@@ -34,12 +34,12 @@ export const exitMc = async (req, res, next) => {
   try {
     await logExit(teNumber.toLowerCase());
 
-    let status = await McStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10) });
+    let status = await McStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0] });
     if (!status) {
       return next(CreateError(204, "No medical center status found for today"));
     }
     status.currentOccupancy -= 1;
-    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10)
+    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0]
     status.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
     await status.save();
 
@@ -50,7 +50,7 @@ export const exitMc = async (req, res, next) => {
 };
 
 export const viewTrafficStatus = async (req, res, next) => {
-  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 9);
+  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
 
   try {
     const status = await McStatus.findOne({ date: currentDate });
@@ -102,7 +102,7 @@ export const updateDoctorAvailability = async (req, res, next) => {
       isAvailable = isAvailable.toLowerCase() === 'true';
     }
 
-    const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+    const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
 
     // Find and update the document that matches the current date
     const status = await McStatus.findOneAndUpdate(
@@ -125,7 +125,7 @@ export const updateDoctorAvailability = async (req, res, next) => {
 
 export const getDoctorAvailability = async (req, res, next) => {
 
-  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 9);
+  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
 
   try {
     const doctor = await McStatus.findOne({ date: currentDate });

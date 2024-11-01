@@ -3,7 +3,7 @@ import { CreateError } from "../utils/error.js";
 import { CreateSuccess } from "../utils/success.js";
 
 export const reportCanteenStatus = async (canteen, peopleRange, next) => {
-    const localDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 9);
+    const localDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
     let canteenStatus = await CanteenStatus.findOne({ date: localDate, canteen });
 
     // If no status for today exists, create a new one
@@ -41,7 +41,7 @@ export const reportCanteenStatus = async (canteen, peopleRange, next) => {
 export const getCanteenStatus = async (location, next) => {
 
     const currentTime = new Date();
-    const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 9);
+    const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
 
     const thirtyMinutesAgo = new Date(currentTime.getTime() + 300 * 60 * 1000);
 

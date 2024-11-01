@@ -9,13 +9,13 @@ export const enterLibrary = async (req, res, next) => {
   try {
     await logEntry(teNumber.toLowerCase(), phoneNumber, "Library");
 
-    let status = await LibraryStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10) });
+    let status = await LibraryStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0] });
     if (!status) {
       status = new LibraryStatus();
     }
     status.currentOccupancy += 1;
     status.entrances += 1; // Increment the number of entrances; for admin view: nivindulakshitha
-    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
     status.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
     await status.save();
 
@@ -31,12 +31,12 @@ export const exitLibrary = async (req, res, next) => {
   try {
     await logExit(teNumber.toLowerCase(), "Library");
 
-    let status = await LibraryStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10) });
+    let status = await LibraryStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0] });
     if (!status) {
       return next(CreateError(204, "No library status found for today"));
     }
     status.currentOccupancy -= 1;
-    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
     status.lastModified = new Date();
     await status.save();
 
@@ -47,7 +47,7 @@ export const exitLibrary = async (req, res, next) => {
 };
 
 export const viewTrafficStatus = async (req, res, next) => {
-  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).slice(0, 10);
+  const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
   try {
     const status = await LibraryStatus.findOne({ date: currentDate });
 
