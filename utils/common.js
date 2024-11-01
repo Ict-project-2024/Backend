@@ -54,28 +54,28 @@ export const getDailyTraffic = async (currentDate, location) => {
 };
 
 export const accessHistory = async (location) => {
+	// Current date and past 28 days date, adjusted to midnight for accurate comparison
 	const currentDate = new Date();
 	const pastTwentyEightDays = new Date(currentDate.setDate(currentDate.getDate() - 28));
+	pastTwentyEightDays.setHours(0, 0, 0, 0);
 
 	const matchStage = {
-		$match: { date: { $gte: pastTwentyEightDays.toISOString().split('T')[0] } }
+		$match: { lastModified: { $gte: pastTwentyEightDays } }
 	};
 
 	const sortStage = {
-		$sort: { date: 1 }
+		$sort: { lastModified: 1 }
 	};
 
-	const pipeline = [
-		matchStage,
-		sortStage
-	];
+	const pipeline = [matchStage, sortStage];
 
-	if (location == "Library") {
+	if (location === "Library") {
 		return await LibraryStatus.aggregate(pipeline);
 	} else {
 		return await McStatus.aggregate(pipeline);
 	}
 };
+
 
 
 export const userAccessHistory = async (location, dateOptions) => {
