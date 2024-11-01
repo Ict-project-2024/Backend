@@ -6,17 +6,25 @@ import { CreateSuccess } from "../utils/success.js";
 export const enterLibrary = async (req, res, next) => {
   const { teNumber, phoneNumber } = req.body;
 
+  const currentTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
+
   try {
     await logEntry(teNumber.toLowerCase(), phoneNumber, "Library");
 
+
+    
+
     let status = await LibraryStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0] });
+
     if (!status) {
       status = new LibraryStatus();
     }
     status.currentOccupancy += 1;
     status.entrances += 1; // Increment the number of entrances; for admin view: nivindulakshitha
+
     status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
     status.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
+
     await status.save();
 
     return next(CreateSuccess(200, "Entry logged successfully"));
@@ -26,10 +34,14 @@ export const enterLibrary = async (req, res, next) => {
 };
 
 export const exitLibrary = async (req, res, next) => {
+
   const { teNumber } = req.body;
+
+  const currentTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
 
   try {
     await logExit(teNumber.toLowerCase(), "Library");
+
 
     let status = await LibraryStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0] });
     if (!status) {
@@ -38,6 +50,7 @@ export const exitLibrary = async (req, res, next) => {
     status.currentOccupancy -= 1;
     status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
     status.lastModified = new Date();
+
     await status.save();
 
     return next(CreateSuccess(200, "Exit logged successfully"));

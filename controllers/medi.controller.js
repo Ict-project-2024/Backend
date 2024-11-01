@@ -12,14 +12,21 @@ export const enterMc = async (req, res, next) => {
 
     await logEntry(teNumber.toLowerCase(), phoneNumber);
 
-    let status = await McStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0] });
+
+    const currentTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
+
+    let status = await McStatus.findOne({ date: currentTime.split(",")[0] });
+
     if (!status) {
       status = new McStatus();
     }
     status.currentOccupancy += 1;
     status.entrances += 1; // Increment the number of entrances; for admin view: nivindulakshitha
+
+    status.lastModified = currentTime;
+
     status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
-    status.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" })
+ 
     await status.save();
 
     return next(CreateSuccess(200, "Entry logged successfully"));
@@ -31,16 +38,28 @@ export const enterMc = async (req, res, next) => {
 export const exitMc = async (req, res, next) => {
   const { teNumber } = req.body;
 
+  const currentTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
+
   try {
+
     await logExit(teNumber.toLowerCase());
 
-    let status = await McStatus.findOne({ date: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0] });
+
+    let status = await McStatus.findOne({ date: currentTime.split(",")[0] });
+
     if (!status) {
       return next(CreateError(204, "No medical center status found for today"));
     }
-    status.currentOccupancy -= 1;
+
+    if (status.currentOccupancy > 0) {
+      status.currentOccupancy -= 1;
+    } else {
+      status.currentOccupancy = 0;
+    }
+    status.lastModified = currentTime;
     status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0]
-    status.lastModified = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
+    
+
     await status.save();
 
     return next(CreateSuccess(200, "Exit logged successfully"));
@@ -107,7 +126,7 @@ export const updateDoctorAvailability = async (req, res, next) => {
     // Find and update the document that matches the current date
     const status = await McStatus.findOneAndUpdate(
       { date: currentDate },   // Match the document with today’s date
-      { isAvailable}, // Update `isAvailable` 
+      { isAvailable }, // Update `isAvailable` 
       { new: true, upsert: true } // Return updated document, create if it doesn’t exist
     );
 
