@@ -37,7 +37,7 @@ export const getCanteenStatus = async (location, next) => {
     const currentTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
 
     const currentDate = currentTime.slice(0, 10);
-    const thirtyMinutesAgo = new Date(currentTime.getTime() - 30 * 60 * 1000);
+    const thirtyMinutesAgo = new Date(currentTime.getHours() - 30 * 60 * 1000);
 
     //const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000); // 30 minutes ago
 
