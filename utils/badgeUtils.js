@@ -6,7 +6,7 @@ const assignBadges = (userVote) => {
 	const dayAgo = new Date(new Date(new Date().setDate(new Date().getDate() - 1)).toDateString())
 
 	// First Step Badger
-	if (userVote.votes === 1 && !userVote.badges.firstStep) {
+	if (userVote.votes === 1) {
 		userVote.badges.firstStep = true;
 	}
 
@@ -28,15 +28,25 @@ const assignBadges = (userVote) => {
 	}
 
 	// Accuracy Star Badge
-	if (userVote.votes >= 90) {
+	if (userVote.consecutiveDays >= 90) {
 		userVote.badges.accuracyStar = true;
+		userVote.badges.weeklyWarrior = true;
+		userVote.badges.dailyContributor = true;
 
 	} else if (userVote.consecutiveDays === 30) {
+		userVote.badges.accuracyStar = false;
+		userVote.badges.weeklyWarrior = true;
 		userVote.badges.dailyContributor = true;
 
 	} else if (userVote.consecutiveDays === 7) {
-		userVote.badges.weeklyWarrior = true;
-	}	
+		userVote.badges.accuracyStar = false;
+		userVote.badges.weeklyWarrior = false;
+		userVote.badges.dailyContributor = true;
+	} else if (userVote.consecutiveDays < 7) {
+		userVote.badges.dailyContributor = false;
+		userVote.badges.weeklyWarrior = false
+		userVote.badges.accuracyStar = false;
+	}
 
 	// Update last vote date
 	userVote.lastVoteDate = now;
