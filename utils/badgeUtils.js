@@ -1,10 +1,9 @@
-import mongoose from "mongoose";
 import UserVote from "../models/UserVote.js";
-import { CreateError } from "../utils/error.js";
 
 const assignBadges = (userVote) => {
 	const now = new Date();
-	const today = now.toISOString().slice(0, 10);
+	const today = now.toISOString();
+	const dayAgo = new Date(new Date(new Date().setDate(new Date().getDate() - 1)).toDateString())
 
 	// First Step Badger
 	if (userVote.votes === 1 && !userVote.badges.firstStep) {
@@ -20,21 +19,24 @@ const assignBadges = (userVote) => {
 		userVote.badges.frequentContributor = "Gold";
 	}
 
+	let votedDateAgo = new Date(new Date(new Date(last).setDate(new Date(last).getDate() - 1)).toDateString())
 	// Daily Contributor Badge
-	if (userVote.lastVoteDate && new Date(userVote.lastVoteDate).toISOString().slice(0, 10) === today) {
+	if (votedDateAgo < dayAgo) {
+		userVote.consecutiveDays -= 1;
+	} else if (userVote.lastVoteDate && new Date(userVote.lastVoteDate).toISOString() !== today) {
 		userVote.consecutiveDays += 1;
-	} else {
-		userVote.consecutiveDays = 1;
 	}
 
-	if (userVote.consecutiveDays === 7) {
+	// Accuracy Star Badge
+	if (userVote.votes >= 90) {
+		userVote.badges.accuracyStar = true;
+
+	} else if (userVote.consecutiveDays === 30) {
 		userVote.badges.dailyContributor = true;
-	}
 
-	// Weekly Warrior Badge
-	if (userVote.consecutiveDays === 30) {
+	} else if (userVote.consecutiveDays === 7) {
 		userVote.badges.weeklyWarrior = true;
-	}
+	}	
 
 	// Update last vote date
 	userVote.lastVoteDate = now;
