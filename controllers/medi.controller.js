@@ -103,9 +103,10 @@ export const viewHistory = async (req, res, next) => {
 
 export const viewUserAccess = async (req, res, next) => {
   const dateOptions = req.body;
+  const { teNumber } = req.body;
 
   try {
-    const history = await userAccessHistory("Medical Center", dateOptions);
+    const history = await userAccessHistory("Medical Center", dateOptions, teNumber);
     return next(CreateSuccess(200, "Medical center access history", history));
   } catch (error) {
     return next(CreateError(500, error.message));
