@@ -10,7 +10,7 @@ const NotificationSchema = new mongoose.Schema(
         },
         message: String,
         type: {
-            type: String, enum: ['batch', 'rank', 'badge'],
+            type: String, enum: ['batch', 'rank', 'badge', 'news'],
             required: true
         },
         read: {
@@ -19,7 +19,8 @@ const NotificationSchema = new mongoose.Schema(
         },
         createdAt: {
             type: Date,
-            default: Date.now
+            default: new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" })
+        
         }
     });
 

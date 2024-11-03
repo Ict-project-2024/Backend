@@ -122,7 +122,4 @@ export const userAccessHistory = async (location, dateOptions) => {
 	}
 };
 
-export const createNotification = async (userId, message, type) => {
-    const notification = new Notification({ userId, message, type });
-    await notification.save();
-};
+

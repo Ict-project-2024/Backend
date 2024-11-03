@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import UserVote from "../models/UserVote.js";
 import { CreateError } from "../utils/error.js";
-import { createNotification } from '../utils/common.js';
+import { createNotification } from '../controllers/notificationController.js';
 
 const assignBadges = async (userVote) => {
 	const now = new Date();
