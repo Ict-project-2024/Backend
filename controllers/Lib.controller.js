@@ -92,9 +92,10 @@ export const viewHistory = async (req, res, next) => {
 
 export const viewUserAccess = async (req, res, next) => {
   const dateOptions = req.body;
+  const { teNumber } = req.body;
 
   try {
-    const history = await userAccessHistory("Library", dateOptions);
+    const history = await userAccessHistory("Library", dateOptions, teNumber);
     return next(CreateSuccess(200, "Library access history", history));
   } catch (error) {
     return next(CreateError(500, error.message));
