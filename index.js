@@ -21,7 +21,8 @@ app.use(express.json());
 
 // CORS middleware configuration
 app.use(cors({
-	origin: '*',
+	origin: ['http://localhost:8080', 'https://unimo.vercel.app'],
+	credentials: true
 }));
 
 app.use("/", databaseMiddleware);
