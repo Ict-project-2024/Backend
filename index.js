@@ -1,90 +1,98 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+
 import roleRoute from './routes/role.route.js';
 import authRoute from './routes/auth.route.js';
 import libRoute from './routes/lib.route.js';
 import mcRoute from './routes/mc.route.js';
 import canteenRoute from './routes/canteen.route.js';
-import cors from "cors";
-import cookieParser from 'cookie-parser';
 import voteRoute from './routes/votes.route.js';
 import userRoute from './routes/user.route.js';
-import saasToken from './routes/saasToken.route.js';
+import saasTokenRoute from './routes/saasToken.route.js';
 
-// Cookie parser middleware
-const app = express();
-app.use(cookieParser());
-
+// Initialize dotenv for environment variables
 dotenv.config();
+
+const app = express();
+
+// Middleware setup
+app.use(cookieParser());
 app.use(express.json());
 
-// CORS middleware configuration
+// CORS configuration with credentials
 app.use(cors({
-	origin: '*',
+	origin: ['http://localhost:8080', 'https://unimo.vercel.app'],
+	credentials: true
 }));
 
+// Database connection middleware
 app.use("/", databaseMiddleware);
+
+// Route handling
 app.use("/api/role", roleRoute);
 app.use("/api/auth", authRoute);
 app.use("/api/library", libRoute);
 app.use("/api/medical-center", mcRoute);
 app.use("/api/canteen", canteenRoute);
 app.use("/api/votes", voteRoute);
-app.use("/api/user/", userRoute);
-app.use('/api/sas-token',saasToken);
+app.use("/api/user", userRoute);
+app.use('/api/sas-token', saasTokenRoute);
 
+// Base route
 app.get("/", (req, res) => {
 	res.send("Server is responding...");
 });
 
-// Database connection middleware:nivindulakshitha
+// Database connection middleware
 async function databaseMiddleware(req, res, next) {
-	const databaseConnection = await databaseConnector(res);
-	if (databaseConnection) {
-		if (req.url === "/api") {
-			res.status(200).json({
-				success: true,
-				message: "Database connection successful"
-			});
-		} else {
-			next();
-		}
-	} else {
-		res.status(500).json({
+	const isConnected = await databaseConnector();
+	if (!isConnected) {
+		return res.status(500).json({
 			success: false,
 			message: "Failed to connect to the database."
 		});
 	}
-};
+	next();
+}
 
-app.use((obj, req, res, next) => {
-	const statusCode = obj.status || 500;
-	const message = obj.message || "something went wrong..";
-	return res.status(statusCode).json({
-		success: [200, 201, 204].some(a => a === obj.status) ? true : false,
+// Error handling middleware
+app.use((err, req, res, next) => {
+	const statusCode = err.status || 500;
+	const success = [200, 201, 204].includes(statusCode);
+	res.status(statusCode).json({
+		success,
 		status: statusCode,
-		message: message,
-		data: obj.data,
-		stack: obj.stack
-	})
-})
-
-app.listen(process.env.PORT, () => {
-	console.log(`Server is running on ${process.env.PORT}`);
+		message: err.message || "Something went wrong.",
+		data: err.data,
+		stack: process.env.NODE_ENV === 'development' ? err.stack : undefined // Only show stack in development
+	});
 });
 
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+	console.log(`Server is running on port ${PORT}`);
+});
+
+// Database connection function with retry logic
 async function databaseConnector(retries = 5, delay = 2000) {
-	while (retries) {
-	  try {
-		await mongoose.connect(process.env.MONGO_URL);
-		return true;
-	  } catch (err) {
-		console.error("Failed to connect to the database. Retrying...", retries);
-		retries -= 1;
-		await new Promise(res => setTimeout(res, delay));
-	  }
+	while (retries > 0) {
+		try {
+			await mongoose.connect(process.env.MONGO_URL, {
+				useNewUrlParser: true,
+				useUnifiedTopology: true
+			});
+			console.log("Connected to MongoDB successfully");
+			return true;
+		} catch (err) {
+			console.error(`Database connection failed. Retries left: ${retries - 1}`);
+			retries -= 1;
+			await new Promise(res => setTimeout(res, delay));
+		}
 	}
+	console.error("All retries exhausted. Database connection failed.");
 	return false;
-  }
-  
+}
