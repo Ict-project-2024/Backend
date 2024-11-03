@@ -11,10 +11,15 @@ import mcRoute from './routes/mc.route.js';
 import canteenRoute from './routes/canteen.route.js';
 import voteRoute from './routes/votes.route.js';
 import userRoute from './routes/user.route.js';
+
+import notificationRoute from './routes/notificationRoutes.js';
+import { verifyUser ,verifyToken } from './utils/verifyToken.js';
+import newsRoute from './routes/news.route.js';
 import saasTokenRoute from './routes/saasToken.route.js';
 
 // Initialize dotenv for environment variables
 dotenv.config();
+
 
 const app = express();
 
@@ -38,8 +43,11 @@ app.use("/api/library", libRoute);
 app.use("/api/medical-center", mcRoute);
 app.use("/api/canteen", canteenRoute);
 app.use("/api/votes", voteRoute);
+app.use("/api/notification", notificationRoute);
+app.use("/api/news", newsRoute);
 app.use("/api/user", userRoute);
 app.use('/api/sas-token', saasTokenRoute);
+
 
 // Base route
 app.get("/", (req, res) => {
