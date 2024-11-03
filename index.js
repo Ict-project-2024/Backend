@@ -51,7 +51,6 @@ async function databaseMiddleware(req, res, next) {
 				message: "Database connection successful"
 			});
 		} else {
-			console.log("Database connection established, redirecting to the next: ", req.url);
 			next();
 		}
 	} else {
@@ -82,7 +81,6 @@ async function databaseConnector(retries = 5, delay = 2000) {
 	while (retries) {
 	  try {
 		await mongoose.connect(process.env.MONGO_URL);
-		console.log("Connected to the database");
 		return true;
 	  } catch (err) {
 		console.error("Failed to connect to the database. Retrying...", retries);

@@ -12,15 +12,21 @@ export const enterMc = async (req, res, next) => {
 
     await logEntry(teNumber.toLowerCase(), phoneNumber);
 
+
     const currentTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" });
 
     let status = await McStatus.findOne({ date: currentTime.split(",")[0] });
+
     if (!status) {
       status = new McStatus();
     }
     status.currentOccupancy += 1;
     status.entrances += 1; // Increment the number of entrances; for admin view: nivindulakshitha
+
     status.lastModified = currentTime;
+
+    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
+ 
     await status.save();
 
     return next(CreateSuccess(200, "Entry logged successfully"));
@@ -38,6 +44,7 @@ export const exitMc = async (req, res, next) => {
 
     await logExit(teNumber.toLowerCase());
 
+
     let status = await McStatus.findOne({ date: currentTime.split(",")[0] });
 
     if (!status) {
@@ -50,6 +57,9 @@ export const exitMc = async (req, res, next) => {
       status.currentOccupancy = 0;
     }
     status.lastModified = currentTime;
+    status.date = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0]
+    
+
     await status.save();
 
     return next(CreateSuccess(200, "Exit logged successfully"));
@@ -60,6 +70,7 @@ export const exitMc = async (req, res, next) => {
 
 export const viewTrafficStatus = async (req, res, next) => {
   const currentDate = new Date().toLocaleString("en-US", { timeZone: "Asia/Colombo" }).split(",")[0];
+
   try {
     const status = await McStatus.findOne({ date: currentDate });
 
@@ -74,6 +85,7 @@ export const viewTrafficStatus = async (req, res, next) => {
       dailyTraffic,
       lastModified: status.lastModified
     }));
+
   } catch (error) {
     return next(CreateError(500, error.message));
   }
@@ -83,7 +95,7 @@ export const viewTrafficStatus = async (req, res, next) => {
 export const viewHistory = async (req, res, next) => {
   try {
     const history = await accessHistory("Medical Center");
-    return next(CreateSuccess(200, "Library access history", history));
+    return next(CreateSuccess(200, "Medical Center access history", history));
   } catch (error) {
     return next(CreateError(500, error.message));
   }
@@ -137,14 +149,15 @@ export const getDoctorAvailability = async (req, res, next) => {
   try {
     const doctor = await McStatus.findOne({ date: currentDate });
 
-    if (!doctor) {
-      return res.status(404).json({ message: "Doctor availability status not found" });
-    }
 
+    if (!doctor) {
+      return res.status(204).json({ message: "Doctor availability status not found" });
+    }
+    
     return next(CreateSuccess(200, "Doctor availability status", {
       isAvailable: doctor.isAvailable
-
     }));
+
   } catch (error) {
     next(CreateError(500, error.message));
   }
