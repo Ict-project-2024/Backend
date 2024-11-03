@@ -79,7 +79,7 @@ export const accessHistory = async (location) => {
 
 
 
-export const userAccessHistory = async (location, dateOptions) => {
+export const userAccessHistory = async (location, dateOptions, teNumber) => {
 	const matchStage = {};
 
 	// Apply filtering based on dateOptions
@@ -105,6 +105,11 @@ export const userAccessHistory = async (location, dateOptions) => {
 
 			matchStage.entryTime = { $gte: pastDaysDate };
 		}
+	}
+
+	// Match teNumber
+	if (teNumber) {
+		matchStage.teNumber = teNumber.toLowerCase();
 	}
 
 	const sortStage = {

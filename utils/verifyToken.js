@@ -7,14 +7,14 @@ export const verifyToken = (req, res, next) => {
 
     if (!token) {
 
-        return next(CreateError(500, "Not authorized.."));
+        return next(CreateError(401, "Not authorized."));
     }
 
     jwt.verify(token,
         process.env.JWT_SECRET,
         (err, user) => {
             if (err) {
-                return next(CreateError(500, "invalide token.."));
+                return next(CreateError(403, "invalide token."));
             } else {
                 req.user = user;
             }
@@ -32,7 +32,7 @@ export const verifyUser = (req, res, next) => {
 
         })
     } catch (error) {
-        return next(CreateError(500, "You are not authorized.."));
+        return next(CreateError(401, "You are not authorized."));
     }
 }
 
@@ -46,6 +46,6 @@ export const verifyAdmin = (req, res, next) => {
         })
     } catch (error) {
         // res.status(500).json({ message: error.message });
-        return next(CreateError(500, "You are not an Admin.."));
+        return next(CreateError(401, "You are not an Admin."));
     }
 } 

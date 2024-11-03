@@ -113,7 +113,12 @@ export const login = async (req, res, next) => {
         if (validPassword) {
             const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin, roles: user.roles }, process.env.JWT_SECRET);
 
-            res.cookie("access_token", token, { httpOnly: true }).status(200).json({
+            res.cookie("access_token", token, {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Lax',
+                path: '/',
+            }).status(200).json({
                 status: 200,
                 message: "Login Success",
                 ...user._doc,
