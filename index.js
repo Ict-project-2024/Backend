@@ -24,7 +24,7 @@ app.use(express.json());
 
 // CORS configuration with credentials
 app.use(cors({
-	origin: ['http://localhost:8080', 'https://unimo.vercel.app'],
+	origin: ['http://localhost:8080', 'https://unimo.vercel.app', 'https://unimo-guhmgefpaufhapfm.southeastasia-01.azurewebsites.net'],
 	credentials: true
 }));
 
