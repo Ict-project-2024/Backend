@@ -11,6 +11,8 @@ import cookieParser from 'cookie-parser';
 import voteRoute from './routes/votes.route.js';
 import userRoute from './routes/user.route.js';
 import saasToken from './routes/saasToken.route.js';
+import notificationRoute from './routes/notificationRoutes.js';
+import { verifyUser ,verifyToken } from './utils/verifyToken.js';
 
 // Cookie parser middleware
 const app = express();
@@ -33,6 +35,7 @@ app.use("/api/canteen", canteenRoute);
 app.use("/api/votes", voteRoute);
 app.use("/api/user/", userRoute);
 app.use('/api/sas-token',saasToken);
+app.use("/api/notification", notificationRoute);
 
 app.get("/", (req, res) => {
 	res.send("Server is responding...");
