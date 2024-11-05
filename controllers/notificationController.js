@@ -9,7 +9,7 @@ export const createNotification = async (userId, message, type) => {
 };
 
 export const getUserNotifications = async (req, res, next) => {
-    const userId = req.body.userId;
+    const { userId } = req.body;
     try {
         const notifications = await Notification.find({ userId }).sort({ createdAt: -1 });
         return next(CreateSuccess(200, "Notifications retrieved successfully", notifications));
